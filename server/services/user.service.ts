@@ -44,9 +44,14 @@ class UserService {
   async updateUser (data: any) {}
 
   async deleteUser (data: any) {
+    const user = await DataBaseService.getDocument('users', data);
+    if(user.isDefault){
+      return false
+    }
     const result = await DataBaseService.deleteDocument('users', data);
     return result;
   }
+
   async getUser(searchCriteria: any): Promise<IUser> {
     const user = await DataBaseService.getDocument('users', searchCriteria);
     return user;

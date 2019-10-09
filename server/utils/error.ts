@@ -1,7 +1,6 @@
 interface IError {
-  error: {
-    status: number, message: string,
-  }
+    status: number;
+    message: string,
 
   [index: string]: any;
 }
@@ -9,21 +8,17 @@ interface IError {
 export class Error {
 
   private error = {
-    error: {
       status:  400,
       message: 'some Error test',
-    },
   } as IError;
 
-  public get eObject (): IError {
-    return { ...this.error };
-  }
-
-  public getEObject (status: number, message: string): IError {
+  public getEObject (status: number, message: string) {
     return {
-      ...this.error,
-      status,
-      message,
+      error:{
+        ...this.error,
+        status,
+        message,
+      }
     };
   }
 }

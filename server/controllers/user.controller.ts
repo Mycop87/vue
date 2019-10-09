@@ -1,5 +1,6 @@
 export {};
 const UserService = require('../services/user.service');
+const Error = require('../utils/error');
 const ObjectID = require('mongodb').ObjectID;
 
 class UsersController {
@@ -43,7 +44,8 @@ class UsersController {
       if (result) {
         return res.status(200).send(result);
       } else {
-        return res.status(500).send({ message: 'can not delete user ' });
+        const error =  Error.getEObject(400, 'can not delete user')
+        return res.status(error.error.status).send(error);
       }
     }
   }

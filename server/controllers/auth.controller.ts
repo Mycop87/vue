@@ -19,21 +19,24 @@ const somethingWrong = {
 
 class AuthController {
   async getToken (req: any, res: any) {
-    const user           = await AuthService.getUser(req.body);
-    if(!user){
-        return res.status(loginError.error.status).json(loginError);
+    const user = await AuthService.getUser(req.body);
+    if (!user) {
+      return res.status(loginError.error.status).json(loginError);
     }
-
-    let head             = Buffer.from(JSON.stringify({
+    const userData = {
+      password: user.password,
+      email:    user.email,
+    };
+    let head       = Buffer.from(JSON.stringify({
       alg: 'HS256',
       typ: 'jwt',
     })).toString('base64');
 
-    let body             = Buffer.from(JSON.stringify(user)).toString('base64');
+    let body             = Buffer.from(JSON.stringify(userData)).toString('base64');
     let signature        = crypto.createHmac('SHA256', tokenKey).update(`${head}.${body}`).digest('base64');
     const token          = `${head}.${body}.${signature}`;
     const tokenIsUpDated = await AuthService.setUserToken(user.email, token);
-    if(!tokenIsUpDated){
+    if (!tokenIsUpDated) {
       return res.status(somethingWrong.error.status).json(somethingWrong);
     }
     return res.status(200).json({
