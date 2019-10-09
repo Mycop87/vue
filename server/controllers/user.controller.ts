@@ -13,7 +13,6 @@ class UsersController {
         }else{
           return res.status(404).send({ message: 'User not found.' });
         }
-
     }
     result = await UserService.getUsers();
     if (result) {

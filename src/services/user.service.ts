@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { environment } from '@/environments/environment.ts';
-import { ICredentials } from '@/interfaces/auth.interface.ts';
-
+import { IUser } from '@/interfaces/user.interface.ts';
 
 
 export class UserService {
@@ -9,8 +8,8 @@ export class UserService {
     return axios.get(`${environment.API_URL}users`);
   }
 
-  public createUser(credentials: ICredentials) {
-    return axios.post(`${environment.API_URL}users/`, credentials);
+  public createUser(user: IUser) {
+    return axios.post(`${environment.API_URL}users/`, user);
   }
 
   public deleteUser(userId: string) {

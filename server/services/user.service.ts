@@ -31,7 +31,7 @@ class UserService {
     }
     const hash   = await AuthService.getHash(data.password);
     const result = await DataBaseService.insertDocument('users', {
-      email:     data.email,
+      ...data,
       password:  hash,
       isDefault: false,
     });

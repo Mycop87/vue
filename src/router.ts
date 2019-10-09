@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
-import CreateUser from '@/views/CreateUser.vue';
 import { AuthService } from '@/services/auth.service';
 
 const authService =  new AuthService();
@@ -34,14 +33,15 @@ export default new Router({
       beforeEnter: authGuard,
     },
     {
+      path: '/users',
+      name: 'users',
+      component: () => import('./views/Users.vue'),
+      beforeEnter: authGuard,
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login,
-    },
-    {
-      path: '/create-user',
-      name: 'create-user',
-      component: CreateUser,
     },
     {
       path: '*',

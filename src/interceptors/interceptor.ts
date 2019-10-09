@@ -17,7 +17,7 @@ export default function setup() {
     return resp;
   }, (err) => {
     if (err.response.data.error) {
-      console.warn(err.response.data.error.message);
+      return Promise.reject(err.response.data.error);
     }
     return Promise.reject();
   });

@@ -1,7 +1,4 @@
 export {};
-import { IUser } from '../interfaces/user.interface';
-
-const UserService     = require('./user.service');
 const bcrypt          = require('bcrypt');
 const DataBaseService = require('./data-base.service');
 const Error           = require('../utils/error');
@@ -17,7 +14,7 @@ class AuthService {
       }
       const user = await DataBaseService.getDocument('users', { token: req.headers.authorization.substring(7)})
       if (!user) {
-        const error = Error.getEObject(500, 'something wrong');
+        const error = Error.getEObject(403, 'invalid Token');
         return res.status(error.error.status).json(error);
       }
       next();
