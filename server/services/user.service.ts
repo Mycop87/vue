@@ -12,10 +12,13 @@ class UserService {
   async getUsers(): Promise<IUser[]>  {
     const users = await DataBaseService.getDocuments('users');
     return users.map((user: any) => {
-      return {
+      const result = {
         ...user,
         password: '',
-      };
+        id:user._id,
+      }
+      delete result._id;
+      return result;
     });
   }
 
@@ -35,19 +38,21 @@ class UserService {
       password:  hash,
       isDefault: false,
     });
+    const id =  result._id;
+    delete result._id;
     return {
       ...result,
+      id,
       password: '',
     };
   }
 
-  async updateUser (data: any) {}
+  async updateUser(searchCriteria: any, data: any) {
+    const result = await DataBaseService.updateDocument('users', searchCriteria, data);
+    return result
+  }
 
-  async deleteUser (data: any) {
-    const user = await DataBaseService.getDocument('users', data);
-    if(user.isDefault){
-      return false
-    }
+  async deleteUser(data: any) {
     const result = await DataBaseService.deleteDocument('users', data);
     return result;
   }

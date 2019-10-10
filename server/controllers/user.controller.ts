@@ -34,11 +34,37 @@ class UsersController {
     }
   }
 
-  updateUser (req:any, res:any) {}
+  async updateUser (req:any, res:any) {
+    const searchCriteria = {_id: ObjectID(req.body.id)}
+    const existUser =  await UserService.getUser(searchCriteria);
+    if(!existUser){
+      const error =  Error.getEObject(400, 'user does not exist')
+      return res.status(error.error.status).send(error);
+    }
+    const userData = {...req.body}
+    delete userData.id;
+    const result = await UserService.updateUser(searchCriteria, userData);
+    if (!result.error){
+      return res.status(200).send({message: 'user was updated'});
+    } else {
+      const error =  Error.getEObject(400, 'can not update user')
+      return res.status(error.error.status).send(error);
+    }
+  }
 
   async deleteUser (req:any, res:any) {
     if (req.query.id) {
       const data = {_id: ObjectID(req.query.id)}
+      const user = await UserService.getUser(data);
+      if(!user){
+        const error =  Error.getEObject(400, 'user does not exist')
+        return res.status(error.error.status).send(error);
+      }
+      if(user.isDefault){
+        const error =  Error.getEObject(400, 'you can not delete default user')
+        return res.status(error.error.status).send(error);
+      }
+
       const result = await UserService.deleteUser(data);
       if (result) {
         return res.status(200).send(result);
@@ -47,6 +73,8 @@ class UsersController {
         return res.status(error.error.status).send(error);
       }
     }
+    const error =  Error.getEObject(400, 'user does not exist')
+    return res.status(error.error.status).send(error);
   }
 }
 

@@ -1,6 +1,6 @@
 export {};
 const MongoClient = require('mongodb').MongoClient;
-const url         = 'mongodb://admin:admin@localhost:27017';
+const url         = 'mongodb://localhost:27017';
 const dbName      = 'vue';
 
 class DataBaseService {
@@ -87,7 +87,7 @@ class DataBaseService {
       client.close();
     }
   }
-  async updateDocument (collectionName: string, serachCriteria: any, updateData:any) {
+  async updateDocument (collectionName: string, searchCriteria: any, updateData:any) {
     const client = await MongoClient.connect(url, {
                                       useNewUrlParser:    true,
                                       useUnifiedTopology: true,
@@ -99,7 +99,7 @@ class DataBaseService {
     try {
       const db         = client.db(dbName);
       const collection = db.collection(collectionName);
-      let res          = await  collection.updateOne(serachCriteria, {$set: updateData});
+      let res          = await  collection.updateOne(searchCriteria, {$set: updateData});
       return res ? true : false;
     } catch (err) {
       console.log(err);

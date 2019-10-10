@@ -10,9 +10,9 @@
           <tr>
             <td>
               <v-text-field
-                v-model="editableUser.email"
+                v-model="user.email"
                 :rules="emailRules"
-                :readonly="editableUser.isDefault"
+                :readonly="user.isDefault"
                 label="Email"
                 required
               ></v-text-field>
@@ -21,9 +21,9 @@
           <tr v-if="mode === 'CREATE' ">
             <td>
               <v-text-field
-                v-model="editableUser.password"
+                v-model="user.password"
                 :type="'password'"
-                :readonly="editableUser.isDefault"
+                :readonly="user.isDefault"
                 :rules="passRules"
                 label="Password"
                 required
@@ -33,9 +33,9 @@
           <tr>
             <td>
               <v-text-field
-                v-model="editableUser.firstName"
+                v-model="user.firstName"
                 :rules="nameRules"
-                :readonly="editableUser.isDefault"
+                :readonly="user.isDefault"
                 label="First Name"
                 required
               ></v-text-field>
@@ -44,9 +44,9 @@
           <tr>
             <td>
               <v-text-field
-                v-model="editableUser.lastName"
+                v-model="user.lastName"
                 :rules="nameRules"
-                :readonly="editableUser.isDefault"
+                :readonly="user.isDefault"
                 label="Last Name"
                 required
               ></v-text-field>
@@ -55,9 +55,9 @@
           <tr>
             <td>
               <v-text-field
-                v-model="editableUser.phone"
+                v-model="user.phone"
                 :rules="phoneRules"
-                :readonly="editableUser.isDefault"
+                :readonly="user.isDefault"
                 label="Phone"
                 required
               ></v-text-field>
@@ -99,9 +99,6 @@
     @Prop() private user!: IUser;
     @Prop() private header!: string;
     @Prop() private mode!: 'EDIT' | 'CREATE';
-    private editableUser: IUser = {...this.user};
-
-
 
     private phoneRules = [(v: any) => !!v];
 
@@ -117,10 +114,6 @@
       (v: any) => !!v || 'is required',
     ];
 
-    private beforeUpdate() {
-      this.editableUser = {...this.user};
-    }
-
     private onCloseDialog(): void {
       (this.$refs.form as Vue & { resetValidation: () => {} }).resetValidation();
       this.$emit('onCancel');
@@ -128,7 +121,7 @@
 
     private onSave(): void {
       (this.$refs.form as Vue & { resetValidation: () => {} }).resetValidation();
-      this.$emit('onSave', this.editableUser);
+      this.$emit('onSave', this.user);
     }
   }
 </script>

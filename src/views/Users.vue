@@ -50,26 +50,7 @@
         />
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-      :bottom="false"
-      :color="snackbarColor"
-      :left="false"
-      :multi-line="true"
-      :right="true"
-      :timeout="6000"
-      :top="true"
-      :vertical="false"
-    >
-      {{errorText}}
-      <v-btn
-        dark
-        text
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
+
   </div>
 </template>
 
@@ -87,17 +68,12 @@
     vuetify: new Vuetify(),
   })
   export default class Users extends Vue {
-    private userService              = new UserService();
+    private userService              = new UserService(this.$store);
     private activeUser: IUser | null = null;
-    private snackbar: boolean = false;
-    private snackbarColor: string = 'error';
-    private errorText: string = '';
     private editUserDialog: boolean = false;
     private createUserDialog: boolean = false;
 
-
-    constructor() {
-      super();
+    private created() {
       this.getUsers();
     }
 
@@ -107,14 +83,19 @@
     }
 
     private onCreateUser(newUser: IUser): void {
-      this.userService.createUser(newUser).then(({ data }) => {
+      this.userService.createUser(newUser).then((resp: any) => {
+        const { data } = resp;
         this.$store.commit('addUser', data);
         this.createUserDialog = false;
       });
     }
 
     private onEditUser(user: IUser): void {
-      this.editUserDialog = false;
+      this.userService.updateUser(user).then((resp: any) => {
+        const { data } = resp;
+        this.$store.commit('changeUser', data);
+        this.editUserDialog = false;
+      });
     }
 
     private onCreateUserDialogOpen(): void {
@@ -123,7 +104,10 @@
     }
 
     private getUsers(): void {
-      this.$store.dispatch('loadUsers');
+      this.userService.fetchUsers().then((resp: any) => {
+        const { data } = resp;
+        this.$store.commit('setUsers', data as IUser);
+      });
     }
 
     private get users(): IUser[] {
@@ -133,14 +117,13 @@
     private deleteUser(event: Event, user: IUser): void {
       event.stopPropagation();
       event.preventDefault();
-      this.userService.deleteUser(user._id as string).then(() => {
-        const users = this.users.filter((usr) => {
-          return usr._id !== user._id;
+      this.userService.deleteUser(`${user.id}`).then(() => {
+        const users = this.$store.state.users.filter((usr: IUser) => {
+          return usr.id !== user.id;
         });
         this.$store.commit('setUsers', users);
-      }, (error) => {
-          this.errorText = error.message;
-          this.snackbar = true;
+      }, (error: any) => {
+        this.$store.commit('setErrorState', error);
       });
     }
   }
