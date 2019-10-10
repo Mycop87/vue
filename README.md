@@ -2,14 +2,18 @@
 
 ## Project setup
 ```
+install mongoDB
+npm install
+cd server
 npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm start
 ```
-
+### Run nodejs server
+cd server; npm start
 ### Compiles and minifies for production
 ```
 npm run build
