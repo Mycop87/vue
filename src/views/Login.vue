@@ -13,13 +13,15 @@
   export default class Login extends Vue {
     private userName: string = '';
     private password: string = '';
-    private authService = new AuthService();
+    private authService = new AuthService(this.$store);
 
     private login() {
-      this.authService.login(this.userName, this.password).then((res) => {
+      this.authService.login(this.userName, this.password).then((res: any) => {
         const { token } = res.data ;
         this.authService.setToken(token);
         this.$router.push('/');
+      }, (error: any) => {
+        this.$store.commit('setErrorState', error);
       });
     }
   }

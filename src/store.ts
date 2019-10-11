@@ -29,14 +29,14 @@ export default new Vuex.Store({
       state.users.push(user);
     },
     changeUser: (state, user: IUser) => {
-      const users = state.users;
-      state.users.map((usr: IUser) => {
+      const users = state.users.map((usr: IUser) => {
         if (usr.id === user.id) {
-          return user;
+          return {...user};
         } else {
           return usr;
         }
       });
+      state.users = [...users];
     },
     spinnerIncrease: (state) => {
       state.spinner++;

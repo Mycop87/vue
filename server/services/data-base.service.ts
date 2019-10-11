@@ -1,6 +1,6 @@
 export {};
 const MongoClient = require('mongodb').MongoClient;
-const url         = 'mongodb://localhost:27017';
+const url         = 'mongodb://admin:admin@localhost:27017';
 const dbName      = 'vue';
 
 class DataBaseService {

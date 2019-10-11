@@ -8,7 +8,8 @@
       |
       <router-link to="/about">About</router-link>
       |
-      <router-link to="/users">Users</router-link>
+      <router-link to="/users">Users</router-link> |
+
       <button v-on:click="logout">Logout</button>
     </div>
     <router-view/>
@@ -17,25 +18,25 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {AuthService} from '@/services/auth.service';
+  import { Component, Vue } from 'vue-property-decorator';
+  import { AuthService } from '@/services/auth.service';
   import SpinnerComponent from '@/components/Spinner.vue';
   import ErrorComponent from '@/components/Error.vue';
   import router from '@/router';
 
-  const authService = new AuthService();
-
-  export default Vue.extend({
-    name: 'App',
+  @Component({
     components: {SpinnerComponent, ErrorComponent},
-    data: () => ({
-      showLogin: () => {
-        return !authService.token;
-      },
-      logout: () => {
-        authService.logout();
-        router.push('/login');
-      },
-    }),
-  });
+  })
+  export default class App extends Vue {
+    private  authService = new AuthService(this.$store);
+
+    private showLogin() {
+      return !this.authService.token;
+    }
+
+    private logout() {
+      this.authService.logout();
+      router.push('/login');
+    }
+  }
 </script>

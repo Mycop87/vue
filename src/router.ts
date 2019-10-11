@@ -2,14 +2,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
-import { AuthService } from '@/services/auth.service';
-
-const authService =  new AuthService();
 
 Vue.use(Router);
 
 const authGuard = (to: any, from: any, next: any) => {
-  if (!authService.token) {
+  if (!window.sessionStorage.getItem('token')) {
     next('/login');
     return;
   }

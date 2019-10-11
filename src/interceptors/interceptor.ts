@@ -1,11 +1,8 @@
 import axios from 'axios';
-import { AuthService } from '@/services/auth.service.ts';
-
-const authService = new AuthService();
 
 export default function setup() {
   axios.interceptors.request.use((config) => {
-    config.headers.authorization = `Bearer ${authService.token}`;
+    config.headers.authorization = `Bearer ${window.sessionStorage.getItem('token')}`;
     return config;
   }, (err) => {
     return Promise.reject(err);

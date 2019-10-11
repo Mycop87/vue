@@ -91,10 +91,11 @@
     }
 
     private onEditUser(user: IUser): void {
-      this.userService.updateUser(user).then((resp: any) => {
-        const { data } = resp;
-        this.$store.commit('changeUser', data);
+      this.userService.updateUser(user).then(() => {
+        this.$store.commit('changeUser', user);
         this.editUserDialog = false;
+      }, (error: any) => {
+        this.$store.commit('setErrorState', error);
       });
     }
 
